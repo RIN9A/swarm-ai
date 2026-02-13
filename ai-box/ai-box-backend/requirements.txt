@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+pydantic
+pydantic-settings
+langchain
+langchain-ollama
+langgraph
+pdfplumber
+pandas
+requests
+python-dotenv
+redis
+
