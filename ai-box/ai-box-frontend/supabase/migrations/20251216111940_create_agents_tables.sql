@@ -1,39 +1,4 @@
-/*
-  # AI Box - Конструктор ИИ-агентов
-  
-  1. Новые таблицы
-    - `agents`
-      - `id` (uuid, primary key)
-      - `name` (text) - название агента
-      - `role` (text) - роль (юрист, бухгалтер и т.д.)
-      - `description` (text) - описание агента
-      - `system_prompt` (text) - промпт для LLM
-      - `model` (text) - выбранная модель
-      - `temperature` (numeric) - температура модели
-      - `max_iterations` (integer) - максимум итераций
-      - `tools` (jsonb) - массив выбранных инструментов
-      - `is_active` (boolean) - статус агента
-      - `run_count` (integer) - количество запусков
-      - `success_rate` (numeric) - процент успеха
-      - `created_at` (timestamptz)
-      - `updated_at` (timestamptz)
-      
-    - `agent_executions`
-      - `id` (uuid, primary key)
-      - `agent_id` (uuid, foreign key)
-      - `input` (text) - входящий запрос
-      - `output` (text) - результат выполнения
-      - `status` (text) - success/error
-      - `logs` (jsonb) - массив логов выполнения
-      - `execution_time` (integer) - время выполнения в мс
-      - `created_at` (timestamptz)
-  
-  2. Безопасность
-    - Включить RLS для всех таблиц
-    - Политики для аутентифицированных пользователей
-*/
 
--- Создаем таблицу агентов
 CREATE TABLE IF NOT EXISTS agents (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   name text NOT NULL,
