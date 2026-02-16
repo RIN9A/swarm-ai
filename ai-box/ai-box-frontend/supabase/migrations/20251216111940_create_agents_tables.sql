@@ -15,8 +15,6 @@ CREATE TABLE IF NOT EXISTS agents (
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );
-
--- Создаем таблицу выполнений
 CREATE TABLE IF NOT EXISTS agent_executions (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   agent_id uuid NOT NULL REFERENCES agents(id) ON DELETE CASCADE,
@@ -27,13 +25,10 @@ CREATE TABLE IF NOT EXISTS agent_executions (
   execution_time integer DEFAULT 0,
   created_at timestamptz DEFAULT now()
 );
-
--- Индексы для производительности
 CREATE INDEX IF NOT EXISTS idx_agents_created_at ON agents(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_agent_executions_agent_id ON agent_executions(agent_id);
 CREATE INDEX IF NOT EXISTS idx_agent_executions_created_at ON agent_executions(created_at DESC);
 
--- Функция для автоматического обновления updated_at
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -42,18 +37,15 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Триггер для обновления updated_at
 DROP TRIGGER IF EXISTS update_agents_updated_at ON agents;
 CREATE TRIGGER update_agents_updated_at
   BEFORE UPDATE ON agents
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
--- Включаем RLS
 ALTER TABLE agents ENABLE ROW LEVEL SECURITY;
 ALTER TABLE agent_executions ENABLE ROW LEVEL SECURITY;
 
--- Политики для agents
 CREATE POLICY "Users can view all agents"
   ON agents FOR SELECT
   TO authenticated
@@ -75,7 +67,6 @@ CREATE POLICY "Users can delete agents"
   TO authenticated
   USING (true);
 
--- Политики для agent_executions
 CREATE POLICY "Users can view all executions"
   ON agent_executions FOR SELECT
   TO authenticated
@@ -92,7 +83,6 @@ CREATE POLICY "Users can update executions"
   USING (true)
   WITH CHECK (true);
 
--- Вставляем примеры агентов для демонстрации
 INSERT INTO agents (name, role, description, system_prompt, model, temperature, max_iterations, tools, is_active, run_count, success_rate)
 VALUES 
   (
